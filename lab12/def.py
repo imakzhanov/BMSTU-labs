@@ -1,62 +1,98 @@
 '''
-найти и удалить предложение, содержащее зажанное слово наиб. количество раз
+сложение и умножение со скобками
 '''
 
-def print_text(array):  # вывод текста
-    print('\n' + '=' * len(max(array, key=len)))
-    for i in array:
-        print(i)
-    print('=' * len(max(array, key=len)) + '\n')
+def replace_inner_expression(string):
+    digits = '0123456789'
 
+    start, end = 0, 0
+    expression = ''
 
-
-def find_sentences(array):
-    sentences = []
-
-    curr_sentence = ''
-    start_pos = [0, 0]
-    end_pos = [0, 0]
-    for i in range(len(array)):
-        for j in range(len(array[i])):
-            if array == '.':
-                end_pos = [i, j + 1]
-                sentences.append(curr_sentence, start_pos, end_pos)
+    while end < len(string): # считаем все скобки
+        if start == end:
+            if string[end] == '(':
+                expression += string[end]
             else:
-                if curr_sentence ==  '':
-                    start_pos = [i, j]
-                curr_sentence = array[i][j]
+                start += 1
+            end += 1
 
-    return sentences
+        else:
+            if string[end] in digits or string[end] in '+*':
+                expression += string[end]
+                end += 1
+            elif string[end] == ')':
+                expression += string[end]
+                end += 1
 
-def del_sentence(array, word):
-    sentences = find_sentences(array)
-    for i in sentences:
-        print(i)
+                if expression[1:-1]: # проверяем на пустые скобки
+                    value = calculate_expression(expression[1:-1])
+                else:
+                    value = expression
 
-    sentence_del_index = -1
-    max_count = 0
-    for i in range(len(sentences)):
-        if sentences[i][0].count(word) > max_count:
-            max_count = sentences[i][0].count(word)
-            sentence_del_index = i
+                string = string[:start] + str(value) + string[end:]
 
-    start = sentences[sentence_del_index][1]
-    end = sentences[sentence_del_index][2]
+                expression = ''
+                start += len(str(value))
+                end = start
 
-    array[start[0]] = array[:start[1]]
-    array[end[0]] = array[end[1]:]
+            else:
+                end += 1
+                start = end
+
+    return string
 
 
-text = ['В,    плаще с кровавым подбоем, шаркающей кавалерийской походкой,',
-        'рано утром 20-7+1 числа      весеннего месяца нисана ',
-        'в крытую колоннаду между двумя крыльями    дворца Ирода Великого',
-        '  вышел прокуратор     Иудеи Понтий Пилат. Более всего ',
-        ' на свете прокуратор ненавидел запах розового масла,',
-        'и всё  теперь       предвещало нехороший   2-1+2+21       день,',
-        'потому что этот запах начал преследовать прокуратора с ',
-        'рассвета. Он казался, что розовый запах источают кипарисы и пальмы в саду.']
+def replace_expressions(string):
+    digits = '0123456789'
 
-while True:
-    print_text(text)
-    input_word = input('\nВведите слово: ')
-    text = del_sentence(text, input_word)
+    string = replace_inner_expression(string) # заменяем все выражения в скобках
+
+    start, end = 0, 0
+    expression = ''
+
+    while end < len(string):
+        if start == end:
+            if string[end] in digits:
+                expression += string[end]
+            else:
+                start += 1
+            end += 1
+        else:
+            if string[end] in digits or string[end] in '+*':
+                expression += string[end]
+                end += 1
+            else:
+                value = calculate_expression(expression)
+                string = string[:start] + str(value) + string[end:]
+
+                expression = ''
+                start += len(str(value))
+                end = start
+
+    if expression: # проверка для выражения на конце строки
+        value = calculate_expression(expression)
+        string = string[:start] + str(value) + string[end:]
+
+
+    return string
+
+
+def calculate_expression(expression): # считает арифм. выражния с + и *
+    expression = expression.split('+')
+    for i in range(len(expression)):
+        if '*' in expression[i]:
+            expression[i] = expression[i].split('*')
+            mult_value = 1
+            for j in expression[i]:
+                mult_value *= int(j)
+            expression[i] = str(mult_value)
+
+    expr_value = sum(int(i) for i in expression)
+
+    return expr_value
+
+string = '2+3рано утром (2) 20+(20+7*2) 10 2*(1+2*3)+1*2 () числа 1+2'
+
+
+string = replace_expressions(string)
+print(string)
