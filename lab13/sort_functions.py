@@ -43,7 +43,7 @@ def sort_table(file_name: str):
             key_values.sort()
 
             file_path, extension = os.path.splitext(file_name)
-            copy_file_name = file_path + '_copy' + extension  # создаем копию файла, куда перемещаем все данные
+            copy_file_name = file_path + '_copy' + extension  # создаем копию файла, куда перемещаем все данные в отсортированном виде
 
             with open(copy_file_name, 'w', encoding='utf-8') as file2:
                 # записываем названия столбцов и их типы
