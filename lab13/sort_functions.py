@@ -24,6 +24,9 @@ def sort_table(file_name: str):
                 if min(columns) < 0 or max(columns) >= len(titles):
                     print('Не все значения верны')
                     continue
+                elif len(columns) != 1 and len(columns) != 2:
+                    print('Необходимо ввести одно или два поля')
+                    continue
                 break
 
             key_values = []  # список со значениями записей в нужных столбцах
