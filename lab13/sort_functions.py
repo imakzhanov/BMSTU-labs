@@ -16,17 +16,17 @@ def sort_table(file_name: str):
             # Ввод значений
             while True:
                 try:
-                    columns = list(
-                        map(int, input('Введите номера столбцов для сортировки(в порядке приоритета): ').split()))
+                    columns = list(map(int, input('Введите номера столбцов для сортировки(в порядке приоритета): ').split()))
                 except:
                     print('Введены не числа')
                     continue
-                if min(columns) < 0 or max(columns) >= len(titles):
-                    print('Не все значения верны')
-                    continue
-                elif len(columns) != 1 and len(columns) != 2:
+                if len(columns) != 1 and len(columns) != 2:
                     print('Необходимо ввести одно или два поля')
                     continue
+                elif min(columns) < 0 or max(columns) >= len(titles):
+                    print('Не все значения верны')
+                    continue
+
                 break
 
             key_values = []  # список со значениями записей в нужных столбцах
@@ -58,6 +58,8 @@ def sort_table(file_name: str):
 
         os.remove(file_name) # меняем начальный файл на файл-копию
         os.replace(copy_file_name, file_name)
+
+        print('\nТаблица отсортирована')
 
 
     else:
