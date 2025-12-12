@@ -188,16 +188,6 @@ def check_input_line(line: list[str], types: list[type]) -> bool:  # прове�
         print('Длина строки не совпадает с количеством полей таблицы')
         return False
 
-    for i in range(len(line)):
-        if ',' in line[i]:
-            print('поле не может содержать запятую, т. к. она является разделителем')
-            return False
-
-        try:
-            element = types[i](line[i])
-        except:
-            print(f'{line[i]} не соответствует типу данных {types[i]}')
-            return False
     return True
 
 
