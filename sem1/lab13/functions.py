@@ -201,7 +201,7 @@ def check_input_line(line: list[str], types: list[type]) -> bool:  # прове�
     return True
 
 
-def read_title(file_path: str): # возвращает список полей и их типов
+def read_title(file_path: str): # возвращает наименования полей и их типы
     with open(file_path, 'r', encoding='utf-8') as file:
         titles = decode_line(file.readline())
         types = decode_types(file.readline())
