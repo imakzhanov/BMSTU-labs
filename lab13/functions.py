@@ -191,7 +191,7 @@ def check_input_line(line: list[str], types: list[type]) -> bool:  # прове�
     for i in range(len(line)):
         if ',' in line[i]:
             print('поле не может содержать запятую, т. к. она является разделителем')
-            return
+            return False
 
         try:
             element = types[i](line[i])
@@ -208,7 +208,7 @@ def read_title(file_path: str): # возвращает список полей �
     return titles, types
 
 
-def print_table(file_path: str, conditionals: dict = None):  # вывод базы данных с условиями
+def print_table(file_path: str, conditionals: dict = None):  # вывод базы таблицы с условиями поиска
     if os.path.exists(file_path):  # проверка существования файла
         print(f'{"Вывод данных":^50}')
         with open(file_path, 'r', encoding='utf-8') as file:
