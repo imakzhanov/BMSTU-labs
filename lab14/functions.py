@@ -188,7 +188,6 @@ def read_table(path: str, with_cond=False):  # вывод таблицы
         while True:
             try:
                 line = [i for i in struct.unpack(lines_format, file.read(line_size))]
-                print(line)
             except:
                 break
             if with_cond: # проверка строчки на условие
@@ -310,8 +309,6 @@ def fill_by_index(path: str):  # запись в любое место
                 except:
                     print('Введенная строка не удовлетворяет типам!')
                 break
-            else:
-                print('Введенная строка не удовлетворяет типам!')
 
 
 def del_by_index(path: str):  # удаление по индексу
@@ -348,11 +345,11 @@ def del_by_index(path: str):  # удаление по индексу
 def read_title(path: str, file=None) -> tuple[str, list[str]]:  # считывание заголовка таблицы и типов
     if file is None:  # файл не открыт
         with open(path, 'rb') as file:
-            lines_format, title_format = file.readline().decode().split(';')
+            lines_format, title_format, *_ = file.readline().decode().split(';')
             title_names = [i.decode() for i in struct.unpack(title_format, file.read(struct.calcsize(title_format)))]
 
     else:
-        lines_format, title_format = file.readline().decode().split(';')
+        lines_format, title_format, *_ = file.readline().decode().split(';')
         title_names = [i.decode() for i in struct.unpack(title_format, file.read(struct.calcsize(title_format)))]
 
     return lines_format, title_names

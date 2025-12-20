@@ -28,7 +28,7 @@ while True:
         case '1':
             curr_path = choose_dir()
         case '2':
-            lines_format, titles = create_table(curr_path)
+            create_table(curr_path)
         case '3':
             read_table(curr_path)
         case '4':
