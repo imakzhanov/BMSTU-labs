@@ -16,7 +16,7 @@ def sort_table(file_name: str):
             # Ввод значений
             while True:
                 try:
-                    columns = list(map(int, input('Введите номера столбцов для сортировки(в порядке приоритета): ').split()))
+                    columns = list(map(int, input('Введите столбцы для сортировки (в порядке приоритета): ').split()))
                 except:
                     print('Введены не числа')
                     continue
