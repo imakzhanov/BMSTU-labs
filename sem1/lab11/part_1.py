@@ -55,10 +55,11 @@ faults = []  # матрица погрешностей
 real_value = round(anti_f(x_end) - anti_f(x_start), 9)  # реальное значение по первообразной
 
 print('-' * 74)
-print(f'|{' ':^30}|{n1:^20}|{n2:^20}|')
+print(f'|{" ":^30}|{n1:^20}|{n2:^20}|')
 print('-' * 74)
 for method in range(2):
     faults.append([])
+
 
     if method == 0:
         str_to_print = f'|{'Серединные прямоугольники':^30}|'
