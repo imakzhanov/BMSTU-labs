@@ -4,7 +4,6 @@ import tkinter as tk
 from tkinter import ttk
 from functions import *
 
-
 # добавление символа
 def add(char):
     inputEntry.insert(tk.END, char)
@@ -31,20 +30,22 @@ root.geometry('350x350')
 # Задаем минимальный размер окна
 root.minsize(350, 350)
 
+# Добавление стиля
+ttk.Style().configure(".",  font="helvetica 20", foreground="#1144AA", background="#79A3F5")
 
-# Позиционирование с помощью Grid (сетка из 4 столбцов и 5 строк)
+# Позиционирование с помощью Grid (сетка из 4 столбцов и 4 строк)
 for c in range(4): root.columnconfigure(index = c, weight = 1)
 for r in range(4): root.rowconfigure(index = r, weight = 1)
 
 # Создание кнопок и полей ввода
-inputEntry = ttk.Entry(justify='right')
+inputEntry = ttk.Entry(justify='right', font = 'helvetica 26')
 inputEntry.grid(column = 0, row = 0, columnspan = 4, sticky ='nsew')
 
 # Кнопки удаления
 clearAllBtn = ttk.Button(text = 'Очистить всё', command = clearAll)
 clearAllBtn.grid(column = 0, row = 1, columnspan = 3, sticky = 'nsew')
 
-clearBtn = ttk.Button(text = '<', command = backspace)
+clearBtn = ttk.Button(text = '⌫', command = backspace)
 clearBtn.grid(column = 3, row = 1, sticky = 'nsew')
 
 # Кнопки цифр
@@ -61,7 +62,7 @@ btn_3 = ttk.Button(text = '3', command = lambda x = '3': add(x))
 btn_3.grid(column = 1, row = 3, sticky = 'nsew')
 
 # Кнопки операций
-dot_btn = ttk.Button(text =',', command = lambda x ='.': add(x))
+dot_btn = ttk.Button(text ='.', command = lambda x ='.': add(x))
 dot_btn.grid(column = 2, row = 3, sticky ='nsew')
 
 plus_btn = ttk.Button(text ='+', command = lambda x = '+': add(x))

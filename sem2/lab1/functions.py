@@ -64,14 +64,14 @@ def from_decimal_to_4(num: int) -> str:
             if fractional_part == 0:
                 break
 
-        result = integer_base4 + fractional_base4
+        result = integer_base4 + '.' + fractional_base4
 
     return '-' + result if is_neg else result
 
 
 # Функция подсчета
 def calculate(input_string):
-    pattern = r'^(-?[0-3]+[.]?[0-3]*)([+-])(-?[0-3]+[.]?[0-3]*)$'
+    pattern = r'^(-?[0-3]+[.]?[0-3]*)([+-])([0-3]+[.]?[0-3]*)$'
 
     parse = re.match(pattern, input_string)
 
