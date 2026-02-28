@@ -82,8 +82,6 @@ def calculate(input_string):
     operator = parse.group(2)
     num2 = parse.group(3)
 
-    print(num1, operator, num2)
-
     num1 = from_4_to_decimal(num1)
     num2 = from_4_to_decimal(num2)
 
