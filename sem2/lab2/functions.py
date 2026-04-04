@@ -9,14 +9,16 @@ def get_function(str):
     return f
 
 
-# returns derivative value
-def derivative(f, x, dx=1e-6):
-    deriv = (f(x + dx) - f(x)) / dx
+# returns derivative func
+def get_derivative(f, dx = 1e-6):
+    def deriv(x):
+        return (f(x + dx) - f(x)) / dx
     return deriv
 
 
-def second_derivative(f, x, dx=1e-6):
-    second_deriv = (f(x + dx) - 2 * f(x) - f(x - dx)) / dx ** 2
+def get_second_derivative(f, dx=1e-6):
+    def second_deriv(x):
+        return (f(x + dx) - 2 * f(x) - f(x - dx)) / dx ** 2
     return second_deriv
 
 
@@ -25,8 +27,9 @@ def combinend_method(f, a, b, eps=1e-6, nmax=100):
     if fa * fb > 0:
         return None, None, 0, 1
 
-    d2a = second_derivative(f, a)
-    d2b = second_derivative(f, b)
+    sec_deriv = get_second_derivative(f, eps)
+    d2a = sec_deriv(a)
+    d2b = sec_deriv(b)
 
     if fa * d2a > 0:
         x_newton = a
@@ -40,7 +43,8 @@ def combinend_method(f, a, b, eps=1e-6, nmax=100):
 
     for i in range(1, nmax + 1):
         # метод Ньютона (касательных)
-        dfx = derivative(f, x_newton)
+        deriv = get_derivative(f)
+        dfx = deriv(x_newton)
         if abs(dfx) < eps:
             return None, None, i, 2
         f_newton = f(x_newton)
@@ -59,7 +63,7 @@ def combinend_method(f, a, b, eps=1e-6, nmax=100):
             return root, f(root), i, 0
 
     root = (x_newton + x_chord) / 2
-    return root, f(root), nmax, 2
+    return root, f(root), nmax, 4
 
 
 # находит все интервалы с корнями
@@ -79,42 +83,35 @@ def get_intervals(f, a, b, h):
 
 
 # находит все точки экстремума
-def get_extremum_points(f, a, b, n=500):
-    xs = np.linspace(a, b, n)
-    pts = []
-    for i in range(1, len(xs) - 1):
-        x = xs[i]
+def get_extremum_intervals(f, a, b, h):
+    intervals = []
+    x1 = a
+    deriv = get_derivative(f)
+    while x1 < b:
+        x2 = min(x1 + h, b)
         try:
-            d1l = derivative(f, xs[i - 1])
-            d1r = derivative(f, xs[i + 1])
-            if np.isfinite(d1l) and np.isfinite(d1r):
-                if d1l * d1r < 0:
-                    pts.append(x)
+            y1, y2 = deriv(x1), deriv(x2)
+            if np.isfinite(y1) and np.isfinite(y2) and (y1 == 0 or y1 * y2 < 0):
+                intervals.append((x1, x2))
         except:
             pass
-    return pts
+        x1 = x2
+    return intervals
 
 
 # находит все точки перегиба
-def get_inflection_points(f, a, b, n=800):
-    xs = np.linspace(a, b, n)
-    pts = []
-    d2_values = []
-    for x in xs:
-        try:
-            d2 = second_derivative(f, x)
-            if np.isfinite(d2):
-                d2_values.append(d2)
-            else:
-                d2_values.append(None)
-        except:
-            d2_values.append(None)
+def get_inflection_intervals(f, a, b, h):
+    intervals = []
+    x1 = a
+    sec_deriv = get_second_derivative(f)
 
-    for i in range(1, len(xs) - 1):
-        left = d2_values[i - 1]
-        right = d2_values[i + 1]
-        if left is None or right is None:
-            continue
-        if left * right < 0:
-            pts.append(xs[i])
-    return pts
+    while x1 < b:
+        x2 = min(x1 + h, b)
+        try:
+            y1, y2 = sec_deriv(x1), sec_deriv(x2)
+            if np.isfinite(y1) and np.isfinite(y2) and (y1 == 0 or y1 * y2 < 0):
+                intervals.append((x1, x2))
+        except:
+            pass
+        x1 = x2
+    return intervals

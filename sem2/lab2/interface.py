@@ -1,7 +1,6 @@
 import tkinter as tk
 from tkinter import ttk, messagebox
 import matplotlib.pyplot as plt
-import numpy as np
 from functions import *
 
 
@@ -14,6 +13,8 @@ def calculate_and_plot():
         eps = float(eps_entry.get())
         nmax = int(nmax_entry.get())
         f = get_function(expr)
+        derivative = get_derivative(f)
+        second_derivative = get_second_derivative(f)
     except Exception as e:
         messagebox.showerror("Ошибка", f"Неверный ввод: {e}")
         return
@@ -31,7 +32,7 @@ def calculate_and_plot():
     for i, (x1, x2) in enumerate(intervals, start=1):
         root, f_root, iters, code = combinend_method(f, x1, x2, eps, nmax)
 
-        if code == 0:
+        if code in [0, 4]:
             roots.append(root)
             table_rows.append([
                 i,
@@ -51,10 +52,22 @@ def calculate_and_plot():
     create_plot(f, a, b)
 
     if roots:
-        plt.scatter(roots, [0] * len(roots), color="red", zorder=5, label="roots")
+        plt.scatter(roots, [0] * len(roots), color="red", zorder=5, label="корни")
 
-    exts_x = get_extremum_points(f, a, b)
-    infl_x = get_inflection_points(f, a, b)
+    # ищем нули первой и второй производной (точки экстремума и перегиба)
+    exts_x, infl_x = [], []
+
+    extremums_intervals = get_extremum_intervals(f, a, b, h)
+    for (x1, x2) in extremums_intervals:
+        root, f_root, iters, code = combinend_method(derivative, x1, x2, eps, nmax)
+        if code in [0, 4]:
+            exts_x.append(root)
+
+    infliction_intervals = get_inflection_intervals(f, a, b, h)
+    for (x1, x2) in infliction_intervals:
+        root, f_root, iters, code = combinend_method(second_derivative, x1, x2, eps, nmax)
+        if code in [0, 4]:
+            infl_x.append(root)
 
     if exts_x:
         exts_y = []
@@ -68,7 +81,7 @@ def calculate_and_plot():
             except:
                 pass
         if exts_x2:
-            plt.scatter(exts_x2, exts_y, color="green", s=25, label="точки экстремума")
+            plt.scatter(exts_x2, exts_y, color="green", s=100, label="точки экстремума")
 
 
     if infl_x:
@@ -83,7 +96,7 @@ def calculate_and_plot():
             except:
                 pass
         if infl_x2:
-            plt.scatter(infl_x2, infl_y, color="blue", s=25, label="точки перегиба")
+            plt.scatter(infl_x2, infl_y, color="blue", s=150, label="точки перегиба")
 
     plt.grid(True)
     plt.legend(loc='upper right')
