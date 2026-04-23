@@ -38,7 +38,7 @@ def calculate_and_plot():
                 i,
                 f"[{x1:.6g}; {x2:.6g}]",
                 f"{root:.10f}",
-                "0.0e+00" if f_root == 0 else "{:.1e}".format(f_root),
+                "{:.1e}".format(f_root),
                 iters,
                 code
             ])
@@ -52,7 +52,7 @@ def calculate_and_plot():
     create_plot(f, a, b)
 
     if roots:
-        plt.scatter(roots, [0] * len(roots), color="red", zorder=5, label="корни")
+        plt.scatter(roots, [0] * len(roots), color="red", zorder=3, label="корни")
 
     # ищем нули первой и второй производной (точки экстремума и перегиба)
     exts_x, infl_x = [], []
@@ -73,6 +73,8 @@ def calculate_and_plot():
         exts_y = []
         exts_x2 = []
         for x in exts_x:
+            if x < a or x > b:
+                continue
             try:
                 y = f(x)
                 if np.isfinite(y):
@@ -81,13 +83,15 @@ def calculate_and_plot():
             except:
                 pass
         if exts_x2:
-            plt.scatter(exts_x2, exts_y, color="green", s=100, label="точки экстремума")
+            plt.scatter(exts_x2, exts_y, color="green", s=100, zorder=2, label="точки экстремума")
 
 
     if infl_x:
         infl_y = []
         infl_x2 = []
         for x in infl_x:
+            if x < a or x > b:
+                continue
             try:
                 y = f(x)
                 if np.isfinite(y):
@@ -164,7 +168,7 @@ for r in range(10): root.rowconfigure(index=r, weight=1)
 
 labels = ["f(x):", "a:", "b:", "h:", "eps:", "Nmax:"]
 
-defaults = ["sin(x)", "-10", "10", "0.5", "1e-6", "100"]
+defaults = ["sin(x)**2 - cos(x)", "-10", "10", "0.1", "1e-6", "10"]
 
 entries = []
 
