@@ -23,12 +23,14 @@ def count_included_points(point: tuple[int, int], points: list[tuple[int, int]],
 
 
 def find_points(points: list[tuple[int, int]], radius: int) -> tuple[tuple[int, int], tuple[int, int], int] | None:
-    for i in range(len(points)):
-        included_points = count_included_points(points[i], points, radius)
-        for j in range(i + 1, len(points)):
-            cur_included_points = count_included_points(points[j], points, radius)
-            if included_points == cur_included_points:
-                return points[i], points[j], included_points
+    included_count = []
+    for i in points:
+        included_count.append(count_included_points(i, points, radius))
+
+    for i in range(len(included_count)):
+        for j in range(i + 1, len(included_count)):
+            if included_count[i] == included_count[j]:
+                return points[i], points[j], included_count[i]
 
     # точки не найдены
     return None

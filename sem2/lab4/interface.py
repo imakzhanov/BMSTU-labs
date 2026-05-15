@@ -58,7 +58,12 @@ def solve():
     except:
         messagebox.showerror("Ошибка", "Радиус должен быть целым числом")
         return
-    a, b, included_points = find_points(points, radius)
+
+    result = find_points(points, radius)
+    if (result is None):
+        messagebox.showerror("Результат", "Нет решения")
+        return
+    a, b, included_points = result
     canvas.create_oval(
         a[0] - radius, a[1] - radius,
         a[0] + radius, a[1] + radius,
