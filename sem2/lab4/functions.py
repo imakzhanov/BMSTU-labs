@@ -11,9 +11,8 @@ import math
 def calc_distance(a: tuple[int, int], b: tuple[int, int]) -> float:
     return math.sqrt((a[0] - b[0])**2 + (a[1] - b[1])**2)
 
-
+# считает сколько точек лежат внутри окружности с центром в данной точке point и радиусом radius
 def count_included_points(point: tuple[int, int], points: list[tuple[int, int]], radius: int) -> int:
-    "считает сколько точек лежат внутри окружности с центром в данной точке point и радиусом radius"
     included_points = 0
     for cur_point in points:
         if calc_distance(point, cur_point) < radius:

@@ -6,14 +6,14 @@ from functions import *
 
 # Функции интерфейса
 
+# считывает координаты нажатия на холст и добавляет точку в список всех точек
 def add_point_from_canvas(event):
-    "считывает координаты нажатия на холст и добавляет точку в список всех точек"
     points.append((event.x, event.y))
     draw_point(event.x, event.y)
     add_point_to_text()
 
+# добавляет точку по кнопке
 def add_point_from_button():
-    "добавляет точку по кнопке"
     x = x_entry.get()
     y = y_entry.get()
     try:
@@ -25,20 +25,19 @@ def add_point_from_button():
     draw_point(x, y)
     add_point_to_text()
 
-
+# рисует точку на холсте
 def draw_point(x, y):
-    "рисует точку на холсте"
     canvas.create_oval(x - 2, y - 2, x + 2, y + 2, fill="black")
     canvas.create_text(x + 10, y - 10, text=str(len(points)))
 
+# добавляет точку в listBox
 def add_point_to_text():
-    "добавляет точку в listBox"
     ind = len(points) - 1
     points_list.insert(tk.END, f"{ind + 1}. X: {points[ind][0]}; Y: {points[ind][1]}")
     points_list.see(tk.END)
 
+# очищает список точек и холст
 def clear_all():
-    "очищает список точек и холст"
     clear_solution()
     canvas.delete("all")
     points.clear()
@@ -49,6 +48,7 @@ def clear_solution():
     canvas.delete("solution")
     solution_label.config(text = "")
 
+# координаты на холсте
 def create_grid_on_canvas():
     # вертикальные линии
     for x in range(0, 1000, 100):
