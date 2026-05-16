@@ -30,7 +30,7 @@ def save_file():
 def encode_message_to_bit(message):
     bit_message = []
     try:
-        byte_message = message.encode("ASCII") + b'\x00'
+        byte_message = message.encode("utf-8") + b'\x00'
     except:
         return None
     for byte in byte_message:
@@ -68,9 +68,12 @@ def hide_message(filename, message):
         if message_index < len(bit_message):
             pixel[0] = change_bit(pixel[0], bit_message[message_index])
             message_index += 1
+
+        if message_index < len(bit_message):
             pixel[1] = change_bit(pixel[1], bit_message[message_index])
             message_index += 1
-            # Меняем все байты
+
+        if message_index < len(bit_message):
             pixel[2] = change_bit(pixel[2], bit_message[message_index])
             message_index += 1
         pixel_index += 1
@@ -86,18 +89,23 @@ def get_message(filename, label):
     if not os.path.isfile(filename) or filename.split('.')[-1] != "bmp":
         return
 
-    message = ''
+    message = bytearray()
     img = Image.open(filename)
     pixels_bytes = img.tobytes()
 
-    for i in range(0, len(pixels_bytes), 8):
-        byte = ''
-        for j in range(i, i + 8):
-            byte += bin(pixels_bytes[j])[-1]
+    bits = ''
+    for i in range(0, len(pixels_bytes), 3):
+        bits += str(pixels_bytes[i] & 1)
+        bits += str(pixels_bytes[i + 1] & 1)
+        bits += str(pixels_bytes[i + 2] & 1)
 
-        if byte == '0' * 8:
+    for i in range(0, len(bits), 8):
+        byte = bits[i:i+8]
+        if len(byte) < 8:
             break
-        message += chr(int(byte, 2))
+        value = int(byte, 2)
+        if value == 0:
+            break
+        message.append(value)
 
-    label.config(text=message)
-
+    label.config(text=message.decode("utf-8"))

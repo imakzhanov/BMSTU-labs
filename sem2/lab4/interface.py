@@ -29,7 +29,7 @@ def add_point_from_button():
 def draw_point(x, y):
     "рисует точку на холсте"
     canvas.create_oval(x - 2, y - 2, x + 2, y + 2, fill="black")
-
+    canvas.create_text(x + 10, y - 10, text=str(len(points)))
 
 def add_point_to_text():
     "добавляет точку в listBox"
@@ -43,10 +43,24 @@ def clear_all():
     canvas.delete("all")
     points.clear()
     points_list.delete(0, tk.END)
+    create_grid_on_canvas()
 
 def clear_solution():
     canvas.delete("solution")
     solution_label.config(text = "")
+
+def create_grid_on_canvas():
+    # вертикальные линии
+    for x in range(0, 1000, 100):
+        canvas.create_line(x, 0, x, 1000, fill='lightgray', width=1)
+        canvas.create_text(x + 10, 10, text=str(x))
+
+
+    # горизонтальные линии
+    for y in range(0, 1000, 100):
+        canvas.create_line(0, y, 1000, y,fill='lightgray', width=1)
+        canvas.create_text(10, y + 10, text=str(y))
+
 
 def solve():
     clear_solution()
@@ -91,6 +105,8 @@ for r in range(20): root.rowconfigure(index=r, weight=1)
 canvas = tk.Canvas(root)
 canvas.grid(row=0, column=2, rowspan=20, columnspan=6, sticky='nsew')
 canvas.bind("<Button-1>", add_point_from_canvas)
+
+create_grid_on_canvas()
 
 ttk.Label(root, text='X:').grid(row=0, column=0)
 ttk.Label(root, text='Y:').grid(row=1, column=0)
