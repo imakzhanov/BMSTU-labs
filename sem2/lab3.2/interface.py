@@ -33,7 +33,7 @@ for r in range(6): root.rowconfigure(index=r, weight=1)
 
 labels = ["Ширина изображения:", "Высота изображения:", "Мощность множества:"]
 
-entries_defaults = ["150", "200", "2000", "10"]
+entries_defaults = ["150", "200", "1000", "10"]
 entries = []
 for i in range(3):
     ttk.Label(text=labels[i]).grid(column=0, row=i)

@@ -1,14 +1,22 @@
 from tkinter import messagebox
 from PIL import Image
 from tkinter import filedialog as fd
+import tkinter as tk
+import os.path
 
-# Возвращает абсолютный путь до файла, или None при ошибке
-def open_file():
+def show_image(path):
+    if os.path.isfile(path) and path.split(".")[-1] == "bmp":
+        img = Image.open(path)
+        img.show()
+
+
+def open_file(path_label):
     filename = fd.askopenfilename(title="Выберите фото для скрытия сообщения")
     if filename.split('.')[-1] != "bmp":
         messagebox.showerror("Ошибка", "Выбран не bpm файл")
-        return None
-    return filename
+        return
+    path_label.delete(0, tk.END)
+    path_label.insert(0, filename)
 
 # Возвращает абсолютный путь до файла, или None при ошибке
 def save_file():
@@ -21,7 +29,10 @@ def save_file():
 # по текстовому сообщению возвращает список его битов
 def encode_message_to_bit(message):
     bit_message = []
-    byte_message = message.encode("ASCII") + b'\x00'
+    try:
+        byte_message = message.encode("ASCII") + b'\x00'
+    except:
+        return None
     for byte in byte_message:
         bit_message += list(int(b) for b in bin(byte)[2:].zfill(8))
     return bit_message
@@ -31,12 +42,14 @@ def change_bit(byte: int, bit: int):
     return byte & ~1 | bit
 
 
-def hide_message(message):
-    filename = open_file()
-    if filename == None:
+def hide_message(filename, message):
+    if not os.path.isfile(filename) or filename.split('.')[-1] != "bmp":
         return
 
     bit_message = encode_message_to_bit(message)
+    if bit_message == None:
+        messagebox.showerror("Ошибка", "Невозможно закодировать ASCII кодом")
+        return
 
     img = Image.open(filename)
     width, height = img.size
@@ -57,9 +70,9 @@ def hide_message(message):
             message_index += 1
             pixel[1] = change_bit(pixel[1], bit_message[message_index])
             message_index += 1
-            if (pixel_index + 1) % 3 != 0: # байт синего цвета каждого 3 пикселя не меняется
-                pixel[2] = change_bit(pixel[2], bit_message[message_index])
-                message_index += 1
+            # Меняем все байты
+            pixel[2] = change_bit(pixel[2], bit_message[message_index])
+            message_index += 1
         pixel_index += 1
         new_pixels.append(tuple(pixel))
 
@@ -69,19 +82,18 @@ def hide_message(message):
         img.save(path_to_save)
 
 
-def get_message(label):
-    filename = open_file()
-    if filename == None:
+def get_message(filename, label):
+    if not os.path.isfile(filename) or filename.split('.')[-1] != "bmp":
         return
 
     message = ''
     img = Image.open(filename)
-    pixels = img.tobytes()
+    pixels_bytes = img.tobytes()
 
-    for i in range(0, len(pixels), 9):
+    for i in range(0, len(pixels_bytes), 8):
         byte = ''
         for j in range(i, i + 8):
-            byte += bin(pixels[j])[-1]
+            byte += bin(pixels_bytes[j])[-1]
 
         if byte == '0' * 8:
             break
