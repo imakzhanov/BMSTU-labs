@@ -6,14 +6,16 @@ from functions import *
 
 # Функции интерфейса
 
+# считывает координаты нажатия на холст и добавляет точку в список всех точек
 def add_point_from_canvas(event):
-    "считывает координаты нажатия на холст и добавляет точку в список всех точек"
-    points.append((event.x, event.y))
-    draw_point(event.x, event.y)
-    add_point_to_text()
+    x, y = event.x, event.y
+    if (x, y) not in points:
+        points.append((event.x, event.y))
+        draw_point(event.x, event.y)
+        add_point_to_text()
 
+# добавляет точку по кнопке
 def add_point_from_button():
-    "добавляет точку по кнопке"
     x = x_entry.get()
     y = y_entry.get()
     try:
@@ -21,32 +23,47 @@ def add_point_from_button():
     except:
         messagebox.showerror("Ошибка", "Координаты точки должны быть целыми числами")
         return
-    points.append((x, y))
-    draw_point(x, y)
-    add_point_to_text()
+    if (x, y) not in points:
+        points.append((x, y))
+        draw_point(x, y)
+        add_point_to_text()
 
-
+# рисует точку на холсте
 def draw_point(x, y):
-    "рисует точку на холсте"
     canvas.create_oval(x - 2, y - 2, x + 2, y + 2, fill="black")
+    canvas.create_text(x + 10, y - 10, text=str(len(points)))
 
-
+# добавляет точку в listBox
 def add_point_to_text():
-    "добавляет точку в listBox"
     ind = len(points) - 1
     points_list.insert(tk.END, f"{ind + 1}. X: {points[ind][0]}; Y: {points[ind][1]}")
     points_list.see(tk.END)
 
+# очищает список точек и холст
 def clear_all():
-    "очищает список точек и холст"
     clear_solution()
     canvas.delete("all")
     points.clear()
     points_list.delete(0, tk.END)
+    create_grid_on_canvas()
 
 def clear_solution():
     canvas.delete("solution")
     solution_label.config(text = "")
+
+# координаты на холсте
+def create_grid_on_canvas():
+    # вертикальные линии
+    for x in range(0, 1000, 100):
+        canvas.create_line(x, 0, x, 1000, fill='lightgray', width=1)
+        canvas.create_text(x + 10, 10, text=str(x))
+
+
+    # горизонтальные линии
+    for y in range(0, 1000, 100):
+        canvas.create_line(0, y, 1000, y,fill='lightgray', width=1)
+        canvas.create_text(10, y + 10, text=str(y))
+
 
 def solve():
     clear_solution()
@@ -64,14 +81,28 @@ def solve():
         messagebox.showerror("Результат", "Нет решения")
         return
     a, b, included_points = result
-    canvas.create_oval(
+    """canvas.create_oval(
         a[0] - radius, a[1] - radius,
         a[0] + radius, a[1] + radius,
         outline='blue', tags = 'solution')
     canvas.create_oval(
         b[0] - radius, b[1] - radius,
         b[0] + radius, b[1] + radius,
-        outline='red', tags = 'solution')
+        outline='red', tags = 'solution')"""
+    t_a = (a[0] + radius * cos(radians(90)), a[1] + radius * sin(radians(90)))
+    t_b = (a[0] + radius * cos(radians(210)), a[1] + radius * sin(radians(210)))
+    t_c = (a[0] + radius * cos(radians(330)), a[1] + radius * sin(radians(330)))
+    canvas.create_line(t_a[0], t_a[1], t_b[0], t_b[1], fill='blue', width=2)
+    canvas.create_line(t_a[0], t_a[1], t_c[0], t_c[1], fill='blue', width=2)
+    canvas.create_line(t_c[0], t_c[1], t_b[0], t_b[1], fill='blue', width=2)
+
+    t_a = (b[0] + radius * cos(radians(90)), b[1] + radius * sin(radians(90)))
+    t_b = (b[0] + radius * cos(radians(210)), b[1] + radius * sin(radians(210)))
+    t_c = (b[0] + radius * cos(radians(330)), b[1] + radius * sin(radians(330)))
+    canvas.create_line(t_a[0], t_a[1], t_b[0], t_b[1], fill='red', width=2)
+    canvas.create_line(t_a[0], t_a[1], t_c[0], t_c[1], fill='red', width=2)
+    canvas.create_line(t_c[0], t_c[1], t_b[0], t_b[1], fill='red', width=2)
+
     # запись в текстовое поле
     solution_label.config(text = f"1: X: {a[0]}; Y: {a[1]}\n2: X: {b[0]}; Y: {b[1]}\n Точек внутри: {included_points}")
 
@@ -91,6 +122,8 @@ for r in range(20): root.rowconfigure(index=r, weight=1)
 canvas = tk.Canvas(root)
 canvas.grid(row=0, column=2, rowspan=20, columnspan=6, sticky='nsew')
 canvas.bind("<Button-1>", add_point_from_canvas)
+
+create_grid_on_canvas()
 
 ttk.Label(root, text='X:').grid(row=0, column=0)
 ttk.Label(root, text='Y:').grid(row=1, column=0)

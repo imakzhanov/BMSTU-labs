@@ -13,7 +13,6 @@ COLORS = {
     }
 
 def create_img(width, height, capacity):
-
     img = Image.new("RGB", (width, height), "white")
 
     for color in COLORS.values():
@@ -41,9 +40,9 @@ def classify_img(k):
 
     pixels = img.load()
 
+    # разбиваем точки по классам
     black_pixels = [] # (x, y)
     colored_pixels = [] # (color, (x, y))
-    # разбиваем точки по классам
     for x in range(width):
         for y in range(height):
             color = pixels[x, y]
@@ -59,21 +58,14 @@ def classify_img(k):
             distances.append((distance_square(black, cords), color))
 
         distances = [i[1] for i in sorted(distances)[:min(k, len(colored_pixels))]]
-        if distances.count(COLORS["red"]) > distances.count(COLORS["blue"]):
+        red_near = distances.count(COLORS["red"])
+        blue_near = distances.count(COLORS["blue"])
+        if red_near >= blue_near:
             pixels[black] = COLORS["red"]
         else:
             pixels[black] = COLORS["blue"]
 
     img.save(CLASSIFIED_PATH)
     img.show()
-
-
-
-
-
-
-
-
-
 
 
