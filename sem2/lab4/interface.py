@@ -8,9 +8,11 @@ from functions import *
 
 # считывает координаты нажатия на холст и добавляет точку в список всех точек
 def add_point_from_canvas(event):
-    points.append((event.x, event.y))
-    draw_point(event.x, event.y)
-    add_point_to_text()
+    x, y = event.x, event.y
+    if (x, y) not in points:
+        points.append((event.x, event.y))
+        draw_point(event.x, event.y)
+        add_point_to_text()
 
 # добавляет точку по кнопке
 def add_point_from_button():
@@ -21,9 +23,10 @@ def add_point_from_button():
     except:
         messagebox.showerror("Ошибка", "Координаты точки должны быть целыми числами")
         return
-    points.append((x, y))
-    draw_point(x, y)
-    add_point_to_text()
+    if (x, y) not in points:
+        points.append((x, y))
+        draw_point(x, y)
+        add_point_to_text()
 
 # рисует точку на холсте
 def draw_point(x, y):
@@ -78,14 +81,28 @@ def solve():
         messagebox.showerror("Результат", "Нет решения")
         return
     a, b, included_points = result
-    canvas.create_oval(
+    """canvas.create_oval(
         a[0] - radius, a[1] - radius,
         a[0] + radius, a[1] + radius,
         outline='blue', tags = 'solution')
     canvas.create_oval(
         b[0] - radius, b[1] - radius,
         b[0] + radius, b[1] + radius,
-        outline='red', tags = 'solution')
+        outline='red', tags = 'solution')"""
+    t_a = (a[0] + radius * cos(radians(90)), a[1] + radius * sin(radians(90)))
+    t_b = (a[0] + radius * cos(radians(210)), a[1] + radius * sin(radians(210)))
+    t_c = (a[0] + radius * cos(radians(330)), a[1] + radius * sin(radians(330)))
+    canvas.create_line(t_a[0], t_a[1], t_b[0], t_b[1], fill='blue', width=2)
+    canvas.create_line(t_a[0], t_a[1], t_c[0], t_c[1], fill='blue', width=2)
+    canvas.create_line(t_c[0], t_c[1], t_b[0], t_b[1], fill='blue', width=2)
+
+    t_a = (b[0] + radius * cos(radians(90)), b[1] + radius * sin(radians(90)))
+    t_b = (b[0] + radius * cos(radians(210)), b[1] + radius * sin(radians(210)))
+    t_c = (b[0] + radius * cos(radians(330)), b[1] + radius * sin(radians(330)))
+    canvas.create_line(t_a[0], t_a[1], t_b[0], t_b[1], fill='red', width=2)
+    canvas.create_line(t_a[0], t_a[1], t_c[0], t_c[1], fill='red', width=2)
+    canvas.create_line(t_c[0], t_c[1], t_b[0], t_b[1], fill='red', width=2)
+
     # запись в текстовое поле
     solution_label.config(text = f"1: X: {a[0]}; Y: {a[1]}\n2: X: {b[0]}; Y: {b[1]}\n Точек внутри: {included_points}")
 
