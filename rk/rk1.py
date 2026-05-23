@@ -1,3 +1,5 @@
+import math
+
 import pygame
 from math import sin, cos, pi
 
@@ -31,7 +33,7 @@ y_center = 500
 
 RADIUS = 300
 TRIANGLE_SIDE = 60
-SPEED = pi / 300
+SPEED = pi / 250
 
 screen = pygame.display.set_mode((1000, 1000))
 clock = pygame.time.Clock()
@@ -53,6 +55,8 @@ while processing:
     draw_triangle(x_pos, y_pos)
 
     angle += SPEED
+    if angle >= 3 * pi / 2 + 2 * pi:
+        processing = False
 
     pygame.display.flip()
     clock.tick(60)
