@@ -55,9 +55,10 @@ while processing:
     draw_triangle(x_pos, y_pos)
 
     angle += SPEED
+    """
     if angle >= 3 * pi / 2 + 2 * pi:
         processing = False
-
+    """
     pygame.display.flip()
     clock.tick(60)
 
