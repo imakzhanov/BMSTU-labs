@@ -1,0 +1,2 @@
+﻿метод;TP;FP;FN;TN;precision;recall;F1;accuracy
+OpenCV fitEllipse;3;3;4;10;0,5000;0,4286;0,4615;0,6500

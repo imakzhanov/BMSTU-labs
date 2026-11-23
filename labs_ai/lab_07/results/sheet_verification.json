@@ -1,0 +1,9 @@
+{
+  "initial_loss": 2.302636455178656,
+  "expected_loss": 2.3026364551786553,
+  "w1_max_error": 2.7755575615628914e-17,
+  "w2_max_error": 1.1102230246251565e-16,
+  "probabilities_max_error": 2.220446049250313e-16,
+  "zero_lr_w1_error": 0,
+  "numpy_after_step_loss": 2.0927391187438853
+}

@@ -1,0 +1,12 @@
+Formulas built; recalculating
+Independent NumPy comparison: {
+  initial_loss: 2.302636455178656,
+  expected_loss: 2.3026364551786553,
+  w1_max_error: 2.7755575615628914e-17,
+  w2_max_error: 1.1102230246251565e-16,
+  probabilities_max_error: 2.220446049250313e-16
+}
+{"kind":"table","sheet":"Summary","address":"A4:B22","rows":19,"cols":2,"values":[["Параметр","Значение"],["Шаг обучения",0.2],["Эпохи для макроса",100],["Текущая эпоха",0],["Цель accuracy",0.999],[null,null],["Точность обучения",0.11],["Точность теста",0.12],["Ошибка обучения",2.302636455178656],["Ошибка теста",2.337147226184145],[null,null],[null,null],["Доверие P",0.99],["Погрешность eps",0.001],["Дисперсия: худший случай",0.25],["N проверки: худший случай",25000000],["Дисперсия при p = 0.999",0.000999000000000001],["N проверки: при p = 0.999",99901],["Безошибочных тестов для нижней границы p >= 0.999",4603]]}
+{"kind":"notice","message":"Cell search matched 0 entries."}
+Inspect result written to file: C:\Users\imakz\PycharmProjects\BMSTU\labs_ai\lab_07\outputs\mnist_perceptron.xlsx.inspect.ndjson
+Saved outputs/mnist_perceptron.xlsx
